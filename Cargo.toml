@@ -6,8 +6,9 @@ edition = "2021"
 [dependencies.fbgl]
 features = ["fbdev", "img"]
 default-features = false
-git = "https://github.com/abc123me/fbgl-rs.git"
-branch = "master"
+path = "/opt/bsp/misc/fbgl-rs"
+#git = "https://github.com/abc123me/fbgl-rs.git"
+#branch = "master"
 
 [dependencies.clap]
 features = ["derive"]
@@ -17,4 +18,5 @@ version = "4.5.56"
 crossbeam = "0.8.4"
 framebuffer = "0.3.1"
 image = "0.25.9"
+rand = "0.10.0"
 rodio = "0.21.1"
