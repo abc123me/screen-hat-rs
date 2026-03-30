@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies.fbgl]
 features = ["fbdev", "img"]
+default-features = false
 git = "https://github.com/abc123me/fbgl-rs.git"
 branch = "master"
 
