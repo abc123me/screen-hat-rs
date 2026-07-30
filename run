@@ -2,7 +2,7 @@
 
 set -e
 
-cd /opt/bsp/builds/screen-hat
+cd /opt/bsp/main/builds/screen-hat
 SCREEN_HAT_RS_OVERRIDE_SRCDIR=/opt/bsp/misc/screen-hat-rs make screen-hat-rs-rebuild
 scp target/usr/bin/screen-hat-rs root@192.168.1.69:.
 ssh root@192.168.1.69 "./screen-hat-rs < <(cat; kill -INT 0)"
