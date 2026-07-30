@@ -1,8 +1,8 @@
+use fbgl::colors::{Color565, ReprColor};
 use fbgl::fb::*;
 use fbgl::*;
 
 use framebuffer::{Framebuffer, KdMode};
-
 use rand::RngExt;
 
 struct Ball {
@@ -44,25 +44,9 @@ fn main() {
         println!("Failed to set graphics mode on framebuffer!");
     }
 
-    let mut gl = BufferedRenderer::new(MultiDisplayHorizontalRenderer::<
-        DirectFramebufferRenderer<Color565>,
-        6,
-    >::new([
-        //DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb0").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb1").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb2").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb3").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb4").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb5").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb6").unwrap()).unwrap(),
-        //DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb7").unwrap()).unwrap(),
-        /*DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb8").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb9").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb10").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb11").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb12").unwrap()).unwrap(),
-        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb13").unwrap()).unwrap(),*/
-    ]));
+    let mut gl = BufferedRenderer::new(
+        DirectFramebufferRenderer::<Color565>::new(Framebuffer::new("/dev/fb0").unwrap()).unwrap(),
+    );
 
     println!(
         "Framebuffer fb0 initialized as {}x{}!",
@@ -76,10 +60,10 @@ fn main() {
 
     let mut rng = rand::rng();
 
-    const ball_cnt: usize = 5;
-    let mut balls = Vec::with_capacity(ball_cnt);
+    const BALL_CNT: usize = 5;
+    let mut balls = Vec::with_capacity(BALL_CNT);
 
-    for i in 0..ball_cnt {
+    for _i in 0..BALL_CNT {
         let sz = rng.random_range(15..50) as u32;
         balls.push(Ball {
             vx: rng.random_range(-10..10),
