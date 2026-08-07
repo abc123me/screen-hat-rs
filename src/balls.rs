@@ -13,12 +13,15 @@ struct Ball {
 	sz: u32,
 	vx: i32,
 	vy: i32,
+	r: u8,
+	g: u8,
+	b: u8,
 }
 
 impl Ball {
 	fn draw<T: GraphicsOperations>(&self, gl: &mut T) {
 		gl.ellipse(
-			<T as GraphicsRenderer>::Color::new(255, 255, 255),
+			<T as GraphicsRenderer>::Color::new(self.r, self.g, self.b),
 			self.xp,
 			self.yp,
 			self.sz,
@@ -71,6 +74,9 @@ impl Animation for BallAnimation {
 				xp: self.rng.random_range(sz..(self.width - sz)),
 				yp: self.rng.random_range(sz..(self.height - sz)),
 				sz,
+				r: if self.rng.random_bool(0.5) { 255 } else { 0 },
+				g: if self.rng.random_bool(0.5) { 255 } else { 0 },
+				b: if self.rng.random_bool(0.5) { 255 } else { 0 },
 			};
 			//println!("Ball at {}, {} - size {}", ball.xp, ball.yp, ball.sz);
 			self.balls.push(ball);

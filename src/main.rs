@@ -12,10 +12,19 @@ cfg_if::cfg_if! {
 	}
 }
 
-use std::time::Duration;
+use std::time::{Instant, Duration};
 
 use screen_hat_rs::balls::BallAnimation;
+use screen_hat_rs::nyan::NyanAnimation;
 use screen_hat_rs::Animation;
+
+const NEXT_AFTER: Duration = Duration::from_secs(30);
+const FRAME_TIME: Duration = Duration::from_millis(16);
+
+enum SelectedAnimation {
+	Ball,
+	Nyan,
+}
 
 fn main() {
 	#[cfg(feature = "sdl")]
@@ -23,7 +32,10 @@ fn main() {
 
 	#[cfg(not(feature = "sdl"))]
 	let mut gl = HeapBuffer::new(
-		DirectFramebufferRenderer::<fbgl::colors::Color565>::new(Framebuffer::new("/dev/fb0").unwrap()).unwrap(),
+		DirectFramebufferRenderer::<fbgl::colors::Color565>::new(
+			Framebuffer::new("/dev/fb0").unwrap(),
+		)
+		.unwrap(),
 	);
 
 	println!(
@@ -32,34 +44,65 @@ fn main() {
 		gl.get_height()
 	);
 
-	let mut anim = BallAnimation::default();
+	let mut ball = BallAnimation::default();
+	ball.init(&mut gl);
 
-	anim.init(&mut gl);
+	let mut nyan = NyanAnimation::default();
+	nyan.init(&mut gl);
 
-	cfg_if::cfg_if! {
-		if #[cfg(feature = "sdl")] {
-			let mut event_pump = gl.context.event_pump().unwrap();
-			'running: loop {
-				for event in event_pump.poll_iter() {
-					match event {
-						Event::Quit { .. }
-						| Event::KeyDown {
-							keycode: Some(Keycode::Escape),
-							..
-						} => break 'running,
-						_ => {}
-					}
+	let mut sel = SelectedAnimation::Ball;
+
+	let mut frame_time = Instant::now() + FRAME_TIME;
+	let mut nexta_time = Instant::now() + NEXT_AFTER;
+
+	#[cfg(feature = "sdl")]
+	let mut event_pump = gl.context.event_pump().unwrap();
+
+	'running: loop {
+		#[cfg(feature = "sdl")]
+		for event in event_pump.poll_iter() {
+			match event {
+				Event::Quit { .. }
+				| Event::KeyDown {
+					keycode: Some(Keycode::Escape),
+					..
+				} => break 'running,
+				Event::KeyDown {
+					keycode: Some(Keycode::Space),
+					..
+				} => {
+					nexta_time = Instant::now() + NEXT_AFTER;
+					sel = sel.next();
 				}
-				anim.draw(&mut gl);
-				gl.push_buffer();
-				::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
+				_ => {}
 			}
+		}
+
+		let ctime = Instant::now();
+		if ctime > frame_time {
+			if ctime > nexta_time {
+				nexta_time = Instant::now() + NEXT_AFTER;
+				sel = sel.next();
+			}
+
+			frame_time = Instant::now() + FRAME_TIME;
+			match sel {
+				SelectedAnimation::Nyan => nyan.draw(&mut gl),
+				SelectedAnimation::Ball => ball.draw(&mut gl),
+			};
+			gl.push_buffer();
 		} else {
-			loop {
-				anim.draw(&mut gl);
-				gl.push_buffer();
-				::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
-			}
+			::std::thread::sleep(Duration::from_millis(1));
+		}
+	}
+}
+
+impl SelectedAnimation {
+	fn next(self) -> SelectedAnimation {
+		use SelectedAnimation::*;
+		match self {
+			Ball => Nyan,
+			Nyan => Ball,
 		}
 	}
 }
