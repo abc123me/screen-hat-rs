@@ -61,7 +61,7 @@ impl NyanStyle {
 		}
 	}
 	fn average_speed(self) -> i32 {
-		(self.rainbow_width() / 10) as i32
+		(self.rainbow_width() / 20) as i32
 	}
 	fn load_cat_sprite(self, img: &ImageBuffer<Rgba<u8>, Vec<u8>>) -> AnimatedSprite {
 		match self {
@@ -159,7 +159,10 @@ impl Animation for NyanAnimation {
 		self.height = gl.get_height();
 		let img = match ImageReader::open("/usr/share/screen-hat/nyan.png") {
 				Ok(img) => img,
-				Err(_) => ImageReader::open("assets/nyan.png").expect("able to open assets/nyan.png"),
+				Err(err) => {
+					eprintln!("Unable to open /usr/share/screen-hat/nyan.png trying assets/nyan.png! {err}");
+					ImageReader::open("assets/nyan.png").expect("able to open assets/nyan.png")
+				},
 			}.decode()
 			.expect("able to decode nyan.png spritesheet")
 			.to_rgba8();
