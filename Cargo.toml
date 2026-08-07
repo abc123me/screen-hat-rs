@@ -4,12 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+cfg-if = "1.0.4"
 framebuffer = "0.3.1"
 rand = "0.10.0"
 
+[dependencies.sdl2]
+version = "0.38.0"
+optional = true
+
 [dependencies.fbgl]
 default-features = false
-features = ["fbdev"]
-path = "/opt/bsp/misc/fbgl-rs"
-#git = "https://github.com/abc123me/fbgl-rs.git"
-#branch = "master"
+git = "https://github.com/abc123me/fbgl-rs.git"
+tag = "v0.2.3"
+
+[features]
+default = [ "fbgl/fbdev", "fbgl/img" ]
+sdl = [ "sdl2", "fbgl/sdl", "fbgl/img" ]
