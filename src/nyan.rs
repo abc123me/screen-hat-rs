@@ -157,10 +157,11 @@ impl Animation for NyanAnimation {
 		gl.clear(<T as GraphicsRenderer>::Color::new(0, 0, 0));
 		self.width = gl.get_width();
 		self.height = gl.get_height();
-		let img = ImageReader::open("assets/nyan.png")
-			.expect("able to open assets/nyan.png")
-			.decode()
-			.expect("able to decode assets/nyan.png")
+		let img = match ImageReader::open("/usr/share/screen-hat/nyan.png") {
+				Ok(img) => img,
+				Err(_) => ImageReader::open("assets/nyan.png").expect("able to open assets/nyan.png"),
+			}.decode()
+			.expect("able to decode nyan.png spritesheet")
 			.to_rgba8();
 		let rng = &mut self.rng;
 		for _ in 0..NORM_CAT_COUNT {
