@@ -3,13 +3,13 @@ use fbgl::image::sprite::{AnimatedSprite, SpriteSheetFormat};
 use fbgl::image::ImageOperations;
 use fbgl::renderers::{GraphicsOperations, GraphicsRenderer};
 
-use image::{ImageBuffer, ImageReader, Rgba};
+use image::{ImageBuffer, Rgba};
 
 use rand::{rngs::ThreadRng, RngExt};
 
 use std::time::Duration;
 
-use crate::Animation;
+use crate::{load_image, Animation};
 
 const NORM_CAT_COUNT: usize = 3;
 const CAPE_CAT_COUNT: usize = 2;
@@ -157,15 +157,7 @@ impl Animation for NyanAnimation {
 		gl.clear(<T as GraphicsRenderer>::Color::new(0, 0, 0));
 		self.width = gl.get_width();
 		self.height = gl.get_height();
-		let img = match ImageReader::open("/usr/share/screen-hat/nyan.png") {
-				Ok(img) => img,
-				Err(err) => {
-					eprintln!("Unable to open /usr/share/screen-hat/nyan.png trying assets/nyan.png! {err}");
-					ImageReader::open("assets/nyan.png").expect("able to open assets/nyan.png")
-				},
-			}.decode()
-			.expect("able to decode nyan.png spritesheet")
-			.to_rgba8();
+		let img = load_image("nyan.png");
 		let rng = &mut self.rng;
 		for _ in 0..NORM_CAT_COUNT {
 			self.cats.push(NyanStyle::Normal.load_sprite(&img));

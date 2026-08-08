@@ -16,8 +16,9 @@ optional = true
 
 [dependencies.fbgl]
 default-features = false
-git = "https://github.com/abc123me/fbgl-rs.git"
-tag = "v0.2.4"
+path = "/opt/bsp/misc/fbgl-rs"
+#git = "https://github.com/abc123me/fbgl-rs.git"
+#tag = "v0.2.4"
 
 [features]
 default = [ "fbgl/fbdev", "fbgl/img" ]

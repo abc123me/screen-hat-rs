@@ -12,10 +12,9 @@ cfg_if::cfg_if! {
 	}
 }
 
-use std::time::{Instant, Duration};
+use std::time::{Duration, Instant};
 
-use screen_hat_rs::balls::BallAnimation;
-use screen_hat_rs::nyan::NyanAnimation;
+use screen_hat_rs::animations::*;
 use screen_hat_rs::Animation;
 
 const NEXT_AFTER: Duration = Duration::from_secs(30);
@@ -24,11 +23,13 @@ const FRAME_TIME: Duration = Duration::from_millis(16);
 enum SelectedAnimation {
 	Ball,
 	Nyan,
+	Defcon,
+	NuclearPixel,
 }
 
 fn main() {
 	#[cfg(feature = "sdl")]
-	let mut gl = SdlRenderer::new(960, 320).unwrap();
+	let mut gl = SdlRenderer::new(1200, 320).unwrap();
 
 	#[cfg(not(feature = "sdl"))]
 	let mut gl = HeapBuffer::new(
@@ -46,9 +47,12 @@ fn main() {
 
 	let mut ball = BallAnimation::default();
 	ball.init(&mut gl);
-
 	let mut nyan = NyanAnimation::default();
 	nyan.init(&mut gl);
+	let mut defcon = DefconAnimation::default();
+	defcon.init(&mut gl);
+	let mut npixel = NuclearPixelAnimation::default();
+	npixel.init(&mut gl);
 
 	let mut sel = SelectedAnimation::Ball;
 
@@ -89,6 +93,8 @@ fn main() {
 			match sel {
 				SelectedAnimation::Nyan => nyan.draw(&mut gl),
 				SelectedAnimation::Ball => ball.draw(&mut gl),
+				SelectedAnimation::Defcon => defcon.draw(&mut gl),
+				SelectedAnimation::NuclearPixel => npixel.draw(&mut gl),
 			};
 			gl.push_buffer();
 		} else {
@@ -102,7 +108,10 @@ impl SelectedAnimation {
 		use SelectedAnimation::*;
 		match self {
 			Ball => Nyan,
-			Nyan => Ball,
+			//Nyan => Defcon,
+			Nyan => NuclearPixel,
+			Defcon => NuclearPixel,
+			NuclearPixel => Ball,
 		}
 	}
 }
