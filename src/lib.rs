@@ -1,16 +1,17 @@
 use fbgl::image::ImageOperations;
 use fbgl::renderers::GraphicsOperations;
+use fbgl::text::TextOperations;
 
-use image::{ImageBuffer, ImageReader, DynamicImage, Rgba, imageops::FilterType};
+use image::{imageops::FilterType, DynamicImage, ImageBuffer, ImageReader, Rgba};
 
 pub mod balls;
 pub mod defcon;
-pub mod nyan;
 pub mod npixel;
+pub mod nyan;
 
 pub trait Animation {
-	fn init<T: GraphicsOperations + ImageOperations>(&mut self, gl: &mut T) -> ();
-	fn draw<T: GraphicsOperations + ImageOperations>(&mut self, gl: &mut T) -> ();
+	fn init<T: GraphicsOperations + ImageOperations + TextOperations>(&mut self, gl: &mut T) -> ();
+	fn draw<T: GraphicsOperations + ImageOperations + TextOperations>(&mut self, gl: &mut T) -> ();
 }
 
 pub fn load_image_raw(name: &str) -> DynamicImage {
@@ -25,18 +26,19 @@ pub fn load_image_raw(name: &str) -> DynamicImage {
 	.expect(format!("able to decode {name} spritesheet").as_str())
 }
 
-
 pub fn load_image(name: &str) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
 	load_image_raw(name).to_rgba8()
 }
 
 pub fn load_image_resize(name: &str, new_w: u32, new_h: u32) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
-	load_image_raw(name).resize_exact(new_w, new_h, FilterType::Triangle).to_rgba8()
+	load_image_raw(name)
+		.resize_exact(new_w, new_h, FilterType::Triangle)
+		.to_rgba8()
 }
 
 pub mod animations {
 	pub use crate::balls::BallAnimation;
 	pub use crate::defcon::DefconAnimation;
-	pub use crate::nyan::NyanAnimation;
 	pub use crate::npixel::NuclearPixelAnimation;
+	pub use crate::nyan::NyanAnimation;
 }

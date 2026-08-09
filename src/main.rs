@@ -29,7 +29,7 @@ enum SelectedAnimation {
 
 fn main() {
 	#[cfg(feature = "sdl")]
-	let mut gl = SdlRenderer::new(1200, 320).unwrap();
+	let mut gl = SdlRenderer::new(1920, 320).unwrap();
 
 	#[cfg(not(feature = "sdl"))]
 	let mut gl = HeapBuffer::new(
@@ -108,8 +108,8 @@ impl SelectedAnimation {
 		use SelectedAnimation::*;
 		match self {
 			Ball => Nyan,
-			//Nyan => Defcon,
-			Nyan => NuclearPixel,
+			Nyan => Defcon,
+			//Nyan => NuclearPixel,
 			Defcon => NuclearPixel,
 			NuclearPixel => Ball,
 		}
