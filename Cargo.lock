@@ -425,7 +425,7 @@ checksum = "caf1079563223d5d59d83c85886a56e586cfd5c1a26292e971a0fa266531ac5a"
 [[package]]
 name = "fbgl"
 version = "0.2.5"
-source = "git+https://github.com/abc123me/fbgl-rs.git?tag=v0.2.5#ed450e596bf55f1b08e7a2dd3852fa19aeb388b6"
+source = "git+https://github.com/abc123me/fbgl-rs.git?tag=v0.2.6#b0f6793079a97ca4a445f1ade9f4fdbbcd9f0d19"
 dependencies = [
  "anyhow",
  "bytemuck",
@@ -1090,7 +1090,7 @@ checksum = "cf54715a573b99ac80df0bc206da022bcd442c974952c7b9720069370852e21f"
 
 [[package]]
 name = "screen-hat-rs"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "cfg-if",
  "clap",
