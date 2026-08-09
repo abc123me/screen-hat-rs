@@ -11,7 +11,7 @@ pub struct DefconAnimation {
 	width: u32,
 	height: u32,
 	img1: Option<ImageBuffer<Rgba<u8>, Vec<u8>>>,
-	pos : u32
+	pos: u32
 }
 
 impl Default for DefconAnimation {
@@ -20,7 +20,7 @@ impl Default for DefconAnimation {
 			img1: None,
 			width: 0,
 			height: 0,
-			pos: 0,
+			pos: 0
 		}
 	}
 }
@@ -49,9 +49,12 @@ impl Animation for DefconAnimation {
 				size: th,
 				blend: false,
 			};
-			let (sz_w, sz_h) = gl.text_size(txt, &trs);
-			let pos0 = self.pos % self.width;
-			self.pos = pos0;
+			let (sz_w, _sz_h) = gl.text_size(txt, &trs);
+			if self.pos + self.height * 2 + sz_w >= self.width {
+				self.pos = 0;
+			}
+
+			let pos0 = self.pos;
 			let pos1 = pos0 + self.height;
 			let pos2 = pos1 + sz_w;
 
@@ -65,7 +68,7 @@ impl Animation for DefconAnimation {
 			);
 			gl.draw_image_rgba(pos2, 0, img);
 
-			self.pos += 5;
+			self.pos += 15;
 		}
 	}
 }

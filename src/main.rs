@@ -6,7 +6,6 @@ cfg_if::cfg_if! {
 		use sdl2::event::Event;
 		use sdl2::keyboard::Keycode;
 	} else {
-		use fbgl::renderers::heap::HeapBuffer;
 		use fbgl::renderers::fb::DirectFramebufferRenderer;
 		use framebuffer::Framebuffer;
 	}
@@ -32,12 +31,10 @@ fn main() {
 	let mut gl = SdlRenderer::new(1920, 320).unwrap();
 
 	#[cfg(not(feature = "sdl"))]
-	let mut gl = HeapBuffer::new(
-		DirectFramebufferRenderer::<fbgl::colors::Color565>::new(
-			Framebuffer::new("/dev/fb0").unwrap(),
-		)
-		.unwrap(),
-	);
+	let mut gl = DirectFramebufferRenderer::<fbgl::colors::Color565>::new(
+		Framebuffer::new("/dev/fb0").unwrap(),
+	)
+	.unwrap();
 
 	println!(
 		"Framebuffer fb0 initialized as {}x{}!",
